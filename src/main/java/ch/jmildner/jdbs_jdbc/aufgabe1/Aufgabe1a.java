@@ -14,7 +14,7 @@ public class Aufgabe1a
     public static void main(String[] args) throws SQLException
     {
         MyTools.uebOut("Start Aufgabe1a", 3);
-
+  
         /**
          * 1. Schritt - get Connection
          */
