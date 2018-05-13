@@ -7,18 +7,36 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Aufgabe1a
 {
 
-    public static void main(String[] args) throws SQLException
+    private static final String DB = "MYSQL";
+
+    public static void main(String[] args)
     {
-        MyTools.uebOut("Start Aufgabe1a", 3);
-  
+        try
+        {
+            new Aufgabe1a().test1(DB);
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(Aufgabe1a.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        new Aufgabe1a().test2(DB);
+    }
+
+    private void test1(final String DB) throws SQLException
+    {
+        MyTools.uebOut("Start Aufgabe1a test1() mit DB " + DB, 2);
+
         /**
          * 1. Schritt - get Connection
          */
-        Connection c = DriverManager.getConnection(MyDbTools.getUrl("H2"));
+        Connection c = DriverManager.getConnection(MyDbTools.getUrl(DB));
 
         /**
          * 2. Schritt - create Statement
@@ -36,16 +54,16 @@ public class Aufgabe1a
         }
         catch (SQLException e)
         {
-            // die table muss nicht vorhanden sein
+            System.out.println("Fehler: " + e.getMessage());
+            // die Tabelle muss nicht vorhanden sein
+            // das heisst, das Programm soll weiterlaufen
         }
 
-        s.execute("create table person1a "
-                + "(id int primary key, name varchar(20), addr varchar(20))");
+        s.execute("create table person1a (id int primary key, name varchar(20), addr varchar(20))");
 
         for (int i = 1; i <= 20; i++)
         {
-            s.execute("insert into person1a values(" + i + ",'hugo-" + i
-                    + "','addr-" + i + "')");
+            s.execute("insert into person1a values(" + i + ",'hugo-" + i + "','addr-" + i + "')");
         }
 
         s.execute("select id,name,addr from person1a order by id");
@@ -61,8 +79,7 @@ public class Aufgabe1a
 
         while (rs.next())
         {
-            System.out.printf("%5d      %-20s %-20s %n",
-                    rs.getInt(1), rs.getString(2), rs.getString(3));
+            System.out.printf("%5d      %-20s %-20s %n", rs.getInt(1), rs.getString(2), rs.getString(3));
         }
 
         rs.close();
@@ -76,13 +93,60 @@ public class Aufgabe1a
          * Wenn eine SQLException geworfen wird, koennen die close()-Befehle
          * nicht aufgerufen werden.
          *
-         * Loesung: try-with-Resource (siehe naechste Aufgabe1c).
+         * Loesung: try-with-Resource (siehe test2()).
          *
          */
         s.close();
         c.close();
 
-        MyTools.untOut("Stopp Aufgabe1a", 3);
+        MyTools.untOut("Stopp Aufgabe1a test1() mit DB " + DB, 2);
+    }
+
+    private void test2(final String DB)
+    {
+
+        try (Connection c = DriverManager.getConnection(MyDbTools.getUrl(DB)))
+        {
+            MyTools.uebOut("Start Aufgabe1a test2() mit DB " + DB, 2);
+
+            try (Statement s = c.createStatement())
+            {
+                s.execute("drop table person1a");
+            }
+            catch (SQLException e)
+            {
+                System.out.println("Fehler: " + e.getMessage());
+                // die Tabelle muss nicht vorhanden sein
+                // das heisst, das Programm soll weiterlaufen
+            }
+
+            try (Statement s = c.createStatement())
+            {
+                s.execute("create table person1a (id int primary key, name varchar(20), addr varchar(20))");
+
+                for (int i = 1; i <= 20; i++)
+                {
+                    s.execute("insert into person1a values(" + i + ",'hugo-" + i + "','addr-" + i + "')");
+                }
+            }
+
+            try (Statement s = c.createStatement())
+            {
+                try (ResultSet rs = s.executeQuery("select id,name,addr from person1a order by id"))
+                {
+                    while (rs.next())
+                    {
+                        System.out.printf("%5d      %-20s %-20s %n", rs.getInt(1), rs.getString(2), rs.getString(3));
+                    }
+                }
+            }
+
+            MyTools.untOut("Stopp Aufgabe1a test2() mit DB " + DB, 2);
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(Aufgabe1a.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

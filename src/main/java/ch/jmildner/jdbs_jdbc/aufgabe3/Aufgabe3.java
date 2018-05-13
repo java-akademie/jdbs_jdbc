@@ -18,8 +18,8 @@ public class Aufgabe3
     {
         new Aufgabe3("H2").run();
         new Aufgabe3("MYSQL").run();
-        new Aufgabe3("POSTGRES").run();
-        new Aufgabe3("ORACLE").run();
+       // new Aufgabe3("POSTGRES").run();
+       // new Aufgabe3("ORACLE").run();
     }
 
     public Aufgabe3(final String DB)
