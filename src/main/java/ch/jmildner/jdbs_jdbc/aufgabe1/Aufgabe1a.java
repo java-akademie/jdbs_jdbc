@@ -12,8 +12,6 @@ import java.util.logging.Logger;
 
 public class Aufgabe1a
 {
-    // xxx
-
     private static final String DB = "MYSQL";
 
     public static void main(String[] args)
