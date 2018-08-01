@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class Aufgabe1a
 {
-    private static final String DB = "MYSQL";
+    private static final String DB = "POSTGRES";
 
     public static void main(String[] args)
     {
