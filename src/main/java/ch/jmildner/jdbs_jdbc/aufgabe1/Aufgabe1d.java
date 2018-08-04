@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 
 public class Aufgabe1d
 {
-
     private final String DATABASE;
     private final DataSource DS;
 
