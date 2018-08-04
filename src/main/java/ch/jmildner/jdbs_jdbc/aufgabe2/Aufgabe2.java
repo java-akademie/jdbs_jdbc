@@ -1,6 +1,9 @@
 package ch.jmildner.jdbs_jdbc.aufgabe2;
 
-import ch.jmildner.jdbs_jdbc.aufgabe1.Aufgabe1c;
+
+
+
+
 import ch.jmildner.tools.MyTools;
 import ch.jmildner.tools.TestDatenTools;
 import java.sql.SQLException;
@@ -8,7 +11,7 @@ import java.util.List;
 
 public class Aufgabe2
 {
-
+ 
     public static void main(String[] args)
     {
         new Aufgabe2().run("H2");

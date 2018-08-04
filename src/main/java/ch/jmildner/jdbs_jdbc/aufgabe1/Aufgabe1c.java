@@ -1,5 +1,6 @@
 package ch.jmildner.jdbs_jdbc.aufgabe1;
 
+import ch.jmildner.tools.KzDbDaten;
 import ch.jmildner.tools.MyDbTools;
 import ch.jmildner.tools.MyTools;
 import java.sql.Connection;
@@ -13,17 +14,14 @@ public class Aufgabe1c
 
     public static void main(String[] args)
     {
-        new Aufgabe1c().run("H2");
-        new Aufgabe1c().run("MYSQL");
-        new Aufgabe1c().run("POSTGRES");
-        new Aufgabe1c().run("ORACLE");
+        MyTools.uebOut("Start Aufgabe1c", 3);
+
+        new Aufgabe1c().run();
     }
 
-    private void run(final String DB)
+    private void run()
     {
-        MyTools.uebOut("Start Aufgabe1c run() mit DB: " + DB, 2);
-
-        try (Connection c = DriverManager.getConnection(MyDbTools.getUrl(DB)))
+        try (Connection c = DriverManager.getConnection(MyDbTools.getUrl()))
         {
             drop(c);
             create(c);
@@ -38,16 +36,18 @@ public class Aufgabe1c
         {
             System.out.println(e.getMessage());
         }
-
-        MyTools.untOut("Stopp Aufgabe1c run() mit DB: " + DB, 2);
     }
 
     private void delete(Connection c) throws SQLException
     {
         try (Statement s = c.createStatement())
         {
-            System.out.printf("%nAnzahl deleted: %d %n",
-                    s.executeUpdate("delete from person1c where addr like 'addr-1%'"));
+            String sql = "delete from person1c where addr like 'addr-1%'";
+            MyTools.uebOut(sql, 1);
+
+            long anz = s.executeUpdate(sql);
+
+            System.out.printf("%nAnzahl deleted: %d %n", anz);
         }
     }
 
@@ -55,20 +55,29 @@ public class Aufgabe1c
     {
         try (Statement s = c.createStatement())
         {
-            System.out.printf("%nAnzahl updated: %d %n",
-                    s.executeUpdate("update person1c set name='max' where id = 5"));
+            String sql = "update person1c set name='max' where id = 5";
+            MyTools.uebOut(sql, 1);
+
+            long anz = s.executeUpdate(sql);
+
+            System.out.printf("%nAnzahl updated: %d %n", anz);
         }
     }
 
     private void selectCount(Connection c) throws SQLException
     {
-        MyDbTools.select(c, "select count(*) from person1c");
+        String sql = "select count(*) from person1c";
+        MyTools.uebOut(sql, 1);
+
+        MyDbTools.select(c, sql, KzDbDaten.METADATEN_UND_DATEN);
     }
 
     private void select(Connection c) throws SQLException
     {
-        MyDbTools.select(c,
-                "select id, name, addr from person1c  order by name");
+        String sql = "select id, name, addr from person1c  order by name";
+        MyTools.uebOut(sql, 1);
+
+        MyDbTools.select(c, sql, KzDbDaten.METADATEN_UND_DATEN);
     }
 
     private void drop(Connection c)
@@ -87,23 +96,32 @@ public class Aufgabe1c
     {
         try (Statement s = c.createStatement())
         {
-            s.execute("create table person1c "
-                    + "(id int primary key, name varchar(20), addr varchar(20))");
+            String sql = "create table person1c (id int primary key, name varchar(20), addr varchar(20))";
+            MyTools.uebOut(sql, 1);
+
+            s.execute(sql);
         }
     }
 
     private void insert(Connection c) throws SQLException
     {
-        try (PreparedStatement ps = c.prepareStatement(
-                "insert into person1c values(?,?,?)");)
+        String sql = "insert into person1c values(?,?,?)";
+        MyTools.uebOut(sql, 1);
+
+        try (PreparedStatement ps = c.prepareStatement(sql))
         {
             for (int i = 1; i <= 10; i++)
             {
                 ps.setInt(1, i);
                 ps.setString(2, "name-" + (int) (1000 + Math.random() * 1000));
                 ps.setString(3, "addr-" + (int) (1000 + Math.random() * 1000));
+                
+                System.out.println(ps + "");
+                
                 ps.execute();
             }
         }
     }
+
+
 }

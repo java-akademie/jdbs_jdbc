@@ -126,10 +126,10 @@ public class Aufgabe4
     private void select(Connection c) throws SQLException
     {
         MyTools.uebOut("TEILNEHMER", 2);
-        MyDbTools.select(c, "select id, name from teilnehmer t", 3);
+        MyDbTools.select(c, "select id, name from teilnehmer t");
 
         MyTools.uebOut("VERANSTALTUNG", 2);
-        MyDbTools.select(c, "select id, titel from veranstaltung v", 3);
+        MyDbTools.select(c, "select id, titel from veranstaltung v");
 
         MyTools.uebOut("BESUCH", 2);
         MyDbTools.select(c, "select     "
@@ -138,7 +138,7 @@ public class Aufgabe4
                 + " t.id as teilnehmer_id, "
                 + " t.name as teilnehmer_name "
                 + " from veranstaltung v, teilnehmer t, besuch b "
-                + " where v.id = b.id_veranstaltung and t.id = b.id_teilnehmer ", 3);
+                + " where v.id = b.id_veranstaltung and t.id = b.id_teilnehmer ");
     }
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface PersonDao
 {
-
+ 
     String GET_BY_ID = "select id, name, addr from person2 where id=?";
     String GET_BY_NAME = "select id, name, addr from person2 where name like ?";
     String GET_ALL = "select id, name, addr from person2";

@@ -1,7 +1,6 @@
+
 package ch.jmildner.jdbs_jdbc.aufgabe1;
 
-import ch.jmildner.tools.MyDbTools;
-import ch.jmildner.tools.MyTools;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,17 +8,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Aufgabe1b
-{
 
-    public static void main(String[] args) throws Exception
+public class Aufgabe1b
+{    
+    static final String URL_H2 = "jdbc:h2:tcp://localhost:9092/~/test;USER=sa;PASSWORD=sa";
+
+    public static void main(String[] args) throws SQLException
     {
-        MyTools.uebOut("Start Aufgabe1b", 3);
+            System.out.println("Start Aufgabe1b");
 
         /**
          * 1. Schritt - get Connection
          */
-        Connection c = DriverManager.getConnection(MyDbTools.getUrl("POSTGRES"));
+        Connection c = DriverManager.getConnection(URL_H2);
 
         /**
          * 2. Schritt - create Statement
@@ -79,15 +80,13 @@ public class Aufgabe1b
          *
          * Jeder dieser DB-Befehle kann eine SQLException werfen.
          *
-         * Wenn eine SQLException geworfen wird, koennen die close()-Befehle
-         * nicht aufgerufen werden.
+         * Wenn eine SQLException geworfen wird, werden die close()-Befehle
+         * nicht mehr aufgerufen.
          *
          * Loesung: try-with-Resource (siehe naechste Aufgabe1c).
          *
          */
         s.close();
         c.close();
-
-        MyTools.untOut("Stopp Aufgabe1b", 3);
     }
 }
